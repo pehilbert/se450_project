@@ -1,0 +1,288 @@
+Red Black Tree Test Program
+===========================
+
+Inserting M and resolving
+   - Root color set to black
+
+Inserting G and resolving
+
+    B
+  R   B
+ B B
+--------
+
+    M
+  G   -
+ - -
+========
+
+Inserting R and resolving
+
+    B
+  R   R
+ B B B B
+--------
+
+    M
+  G   R
+ - - - -
+========
+
+Inserting B and resolving
+   - Parent is red
+   - Uncle is red
+      - Grandparent set to red
+      - Uncle set to black
+      - Parent set to black
+      - Resolving Grandparent
+   - Root color set to black
+
+        B
+    B       B
+  R   B   B   B
+ B B
+----------------
+
+        M
+    G       R
+  B   -   -   -
+ - -
+================
+
+        B
+    B       B
+  R   B   B   B
+ B B
+----------------
+
+        M
+    G       R
+  B   -   -   -
+ - -
+================
+
+Inserting J and resolving
+
+        B
+    B       B
+  R   R   B   B
+ B B B B
+----------------
+
+        M
+    G       R
+  B   J   -   -
+ - - - -
+================
+
+Inserting P and resolving
+
+        B
+    B       B
+  R   R   R   B
+ B B B B B B
+----------------
+
+        M
+    G       R
+  B   J   P   -
+ - - - - - -
+================
+
+Inserting U and resolving
+
+        B
+    B       B
+  R   R   R   R
+ B B B B B B B B
+----------------
+
+        M
+    G       R
+  B   J   P   U
+ - - - - - - - -
+================
+
+Inserting A and resolving
+   - Parent is red
+   - Uncle is red
+      - Grandparent set to red
+      - Uncle set to black
+      - Parent set to black
+      - Resolving Grandparent
+
+                B
+        R               B
+    B       B       R       R
+  R   B   B   B   B   B   B   B
+ B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   -   -   -   -   -   -   -
+ - -
+================================
+
+                B
+        R               B
+    B       B       R       R
+  R   B   B   B   B   B   B   B
+ B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   -   -   -   -   -   -   -
+ - -
+================================
+
+Inserting C and resolving
+
+                B
+        R               B
+    B       B       R       R
+  R   R   B   B   B   B   B   B
+ B B B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   C   -   -   -   -   -   -
+ - - - -
+================================
+
+Inserting H and resolving
+
+                B
+        R               B
+    B       B       R       R
+  R   R   R   B   B   B   B   B
+ B B B B B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   C   H   -   -   -   -   -
+ - - - - - -
+================================
+
+Inserting L and resolving
+
+                B
+        R               B
+    B       B       R       R
+  R   R   R   R   B   B   B   B
+ B B B B B B B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   C   H   L   -   -   -   -
+ - - - - - - - -
+================================
+
+Inserting N and resolving
+   - Parent is red
+   - Uncle is red
+      - Grandparent set to red
+      - Uncle set to black
+      - Parent set to black
+      - Resolving Grandparent
+
+                B
+        R               R
+    B       B       B       B
+  R   R   R   R   R   B   B   B
+ B B B B B B B B B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   C   H   L   N   -   -   -
+ - - - - - - - - - -
+================================
+
+                B
+        R               R
+    B       B       B       B
+  R   R   R   R   R   B   B   B
+ B B B B B B B B B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   C   H   L   N   -   -   -
+ - - - - - - - - - -
+================================
+
+Inserting Q and resolving
+
+                B
+        R               R
+    B       B       B       B
+  R   R   R   R   R   R   B   B
+ B B B B B B B B B B B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   C   H   L   N   Q   -   -
+ - - - - - - - - - - - -
+================================
+
+Inserting S and resolving
+
+                B
+        R               R
+    B       B       B       B
+  R   R   R   R   R   R   R   B
+ B B B B B B B B B B B B B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   C   H   L   N   Q   S   -
+ - - - - - - - - - - - - - -
+================================
+
+Inserting X and resolving
+
+                B
+        R               R
+    B       B       B       B
+  R   R   R   R   R   R   R   R
+ B B B B B B B B B B B B B B B B
+--------------------------------
+
+                M
+        G               R
+    B       J       P       U
+  A   C   H   L   N   Q   S   X
+ - - - - - - - - - - - - - - - -
+================================
+
+Inorder  :  A/R;  B/B;  C/R;  G/R;  H/R;  J/B;  L/R;  M/B;  N/R;  P/B;  Q/R;  R/R;  S/R;  U/B;  X/R
+
+Postorder:  A/R;  C/R;  B/B;  H/R;  L/R;  J/B;  G/R;  N/R;  Q/R;  P/B;  S/R;  X/R;  U/B;  R/R;  M/B
+
+Preorder :  M/B;  G/R;  B/B;  A/R;  C/R;  J/B;  H/R;  L/R;  R/R;  P/B;  N/R;  Q/R;  U/B;  S/R;  X/R
+
+Copying Tree
+                M
+        G               R
+    B       J       P       U
+  A   C   H   L   N   Q   S   X
+ - - - - - - - - - - - - - - - -
+
+End Program
+

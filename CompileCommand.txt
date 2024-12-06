@@ -1,0 +1,1 @@
+gcc -Wall PA08_Main.c RedBlackTreeUtility.c -o project_8

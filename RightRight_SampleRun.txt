@@ -1,0 +1,254 @@
+Red Black Tree Test Program
+===========================
+
+Inserting G and resolving
+   - Root color set to black
+
+Inserting H and resolving
+
+    B
+  B   R
+     B B
+--------
+
+    G
+  -   H
+     - -
+========
+
+Inserting I and resolving
+   - Parent is red
+   - Uncle is black
+   - Right Right Case
+      - Rotate Left from right side of grandparent
+      - Swap grandparent/parent colors
+
+    B
+  R   R
+ B B B B
+--------
+
+    H
+  G   I
+ - - - -
+========
+
+Inserting J and resolving
+   - Parent is red
+   - Uncle is red
+      - Grandparent set to red
+      - Uncle set to black
+      - Parent set to black
+      - Resolving Grandparent
+   - Root color set to black
+
+        B
+    B       B
+  B   B   B   R
+             B B
+----------------
+
+        H
+    G       I
+  -   -   -   J
+             - -
+================
+
+        B
+    B       B
+  B   B   B   R
+             B B
+----------------
+
+        H
+    G       I
+  -   -   -   J
+             - -
+================
+
+Inserting K and resolving
+   - Parent is red
+   - Uncle is black
+   - Right Right Case
+      - Rotate Left from right side of grandparent
+      - Swap grandparent/parent colors
+
+        B
+    B       B
+  B   B   R   R
+         B B B B
+----------------
+
+        H
+    G       J
+  -   -   I   K
+         - - - -
+================
+
+Inserting F and resolving
+
+        B
+    B       B
+  R   B   R   R
+ B B     B B B B
+----------------
+
+        H
+    G       J
+  F   -   I   K
+ - -     - - - -
+================
+
+Inserting E and resolving
+   - Parent is red
+   - Uncle is black
+   - Left Left Case
+      - Rotate Right from left side of grandparent
+      - Swap grandparent/parent colors
+
+        B
+    B       B
+  R   R   R   R
+ B B B B B B B B
+----------------
+
+        H
+    F       J
+  E   G   I   K
+ - - - - - - - -
+================
+
+Inserting D and resolving
+   - Parent is red
+   - Uncle is red
+      - Grandparent set to red
+      - Uncle set to black
+      - Parent set to black
+      - Resolving Grandparent
+
+                B
+        R               B
+    B       B       R       R
+  R   B   B   B   B   B   B   B
+ B B
+--------------------------------
+
+                H
+        F               J
+    E       G       I       K
+  D   -   -   -   -   -   -   -
+ - -
+================================
+
+                B
+        R               B
+    B       B       R       R
+  R   B   B   B   B   B   B   B
+ B B
+--------------------------------
+
+                H
+        F               J
+    E       G       I       K
+  D   -   -   -   -   -   -   -
+ - -
+================================
+
+Inserting C and resolving
+   - Parent is red
+   - Uncle is black
+   - Left Left Case
+      - Rotate Right from left side of grandparent
+      - Swap grandparent/parent colors
+
+                B
+        R               B
+    B       B       R       R
+  R   R   B   B   B   B   B   B
+ B B B B
+--------------------------------
+
+                H
+        F               J
+    D       G       I       K
+  C   E   -   -   -   -   -   -
+ - - - -
+================================
+
+Inserting B and resolving
+   - Parent is red
+   - Uncle is red
+      - Grandparent set to red
+      - Uncle set to black
+      - Parent set to black
+      - Resolving Grandparent
+   - Parent is red
+   - Uncle is black
+   - Left Left Case
+      - Rotate Right from left side of grandparent
+      - Swap grandparent/parent colors
+
+                B
+        R               R
+    B       B       B       B
+  R   B   B   B   B   B   R   R
+ B B                     B B B B
+--------------------------------
+
+                F
+        D               H
+    C       E       G       J
+  B   -   -   -   -   -   I   K
+ - -                     - - - -
+================================
+
+                B
+        R               R
+    B       B       B       B
+  R   B   B   B   B   B   R   R
+ B B                     B B B B
+--------------------------------
+
+                F
+        D               H
+    C       E       G       J
+  B   -   -   -   -   -   I   K
+ - -                     - - - -
+================================
+
+Inserting A and resolving
+   - Parent is red
+   - Uncle is black
+   - Left Left Case
+      - Rotate Right from left side of grandparent
+      - Swap grandparent/parent colors
+
+                B
+        R               R
+    B       B       B       B
+  R   R   B   B   B   B   R   R
+ B B B B                 B B B B
+--------------------------------
+
+                F
+        D               H
+    B       E       G       J
+  A   C   -   -   -   -   I   K
+ - - - -                 - - - -
+================================
+
+Inorder  :  A/R;  B/B;  C/R;  D/R;  E/B;  F/B;  G/B;  H/R;  I/R;  J/B;  K/R
+
+Postorder:  A/R;  C/R;  B/B;  E/B;  D/R;  G/B;  I/R;  K/R;  J/B;  H/R;  F/B
+
+Preorder :  F/B;  D/R;  B/B;  A/R;  C/R;  E/B;  H/R;  G/B;  J/B;  I/R;  K/R
+
+Copying Tree
+                F
+        D               H
+    B       E       G       J
+  A   C   -   -   -   -   I   K
+ - - - -                 - - - -
+
+End Program
+
