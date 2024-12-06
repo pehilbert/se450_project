@@ -1,0 +1,4 @@
+Davis, Glen-Andrew;			488133;	M;	3.937722411
+Reyes, Connor;				191261;	M;	3.295578577
+Johnson, Robert;			603667;	M;	2.844077875
+

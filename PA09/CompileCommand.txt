@@ -1,0 +1,1 @@
+gcc -Wall PA09_Main.c File_Input_Utility.c GeneralUtility.c HeapUtility.c StudentUtility.c -o project_9
