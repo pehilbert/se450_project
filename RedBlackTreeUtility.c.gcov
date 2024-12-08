@@ -1,0 +1,987 @@
+        -:    0:Source:RedBlackTreeUtility.c
+        -:    0:Graph:RedBlackTreeUtility.gcno
+        -:    0:Data:RedBlackTreeUtility.gcda
+        -:    0:Runs:309566
+        -:    0:Programs:1
+        -:    1:// Header file
+        -:    2:#include "RedBlackTreeUtility.h"
+        -:    3:
+        -:    4:// constants
+        -:    5:const char SEMICOLON_BREAK[] = "; ";
+        -:    6:const char THICK_DIVIDER = '=';
+        -:    7:const char THIN_DIVIDER = '-';
+        -:    8:
+        -:    9:// functions
+        -:   10:
+        -:   11:/*
+        -:   12:Name: clearTree
+        -:   13:Process: recursively returns dynamically allocated data to the OS
+        -:   14:         using a post order traversal strategy
+        -:   15:Function input/parameters: working pointer for recursion (RedBlackNodeType *)
+        -:   16:Function output/parameters: none
+        -:   17:Function output/returned: empty tree (NULL)
+        -:   18:Device input/---: none
+        -:   19:Device output/---: none
+        -:   20:Dependencies: free
+        -:   21:*/
+  2573451:   22:RedBlackNodeType *clearTree( RedBlackNodeType *localPtr )
+        -:   23:    {
+  2573451:   24:     if (localPtr != NULL)
+        -:   25:        {
+  1113898:   26:         clearTree(localPtr->leftChildPtr);
+  1113898:   27:         clearTree(localPtr->rightChildPtr);
+  1113898:   28:         free(localPtr);
+  1113898:   29:        }
+        -:   30:
+  2573451:   31:     return NULL;
+        -:   32:    }
+        -:   33:
+        -:   34:/*
+        -:   35:Name: copyTree
+        -:   36:Process: copies a Red Black tree from another Red Black tree
+        -:   37:         using a pre order traversal strategy,
+        -:   38:         appropriately links child parent pointers to current node
+        -:   39:Function input/parameters: pointer to source node (RedBlackNodeType *)
+        -:   40:Function output/parameters: none
+        -:   41:Function output/returned: pointer to destination node (RedBlackNodeType *)
+        -:   42:Device input/---: none
+        -:   43:Device output/---: none
+        -:   44:Dependencies: createNodeFromNode, copyTree (recursively)
+        -:   45:*/
+    #####:   46:RedBlackNodeType *copyTree( RedBlackNodeType *srcPtr )
+        -:   47:    {
+    #####:   48:     RedBlackNodeType* copiedNode = NULL;
+        -:   49:
+    #####:   50:     if (srcPtr != NULL)
+        -:   51:        {
+    #####:   52:         copiedNode = createNodeFromNode(srcPtr);
+    #####:   53:         copiedNode->leftChildPtr = copyTree(srcPtr->leftChildPtr);
+    #####:   54:         copiedNode->rightChildPtr = copyTree(srcPtr->rightChildPtr);
+        -:   55:
+    #####:   56:         if (copiedNode->leftChildPtr != NULL)
+        -:   57:            {
+    #####:   58:             copiedNode->leftChildPtr->parentPtr = copiedNode;
+    #####:   59:            }
+        -:   60:
+    #####:   61:         if (copiedNode->rightChildPtr != NULL)
+        -:   62:            {
+    #####:   63:             copiedNode->rightChildPtr->parentPtr = copiedNode;
+    #####:   64:            }
+    #####:   65:        }
+        -:   66:
+    #####:   67:     return copiedNode;
+        -:   68:    }
+        -:   69:
+        -:   70:/*
+        -:   71:Name: createNodeFromData
+        -:   72:Process: creates a Red Black tree node from the node data given,
+        -:   73:         all links are set to NULL
+        -:   74:Function input/parameters: data (char), color (int)
+        -:   75:Function output/parameters: none
+        -:   76:Function output/returned: pointer to created node (RedBlackNodeType *)
+        -:   77:Device input/---: none
+        -:   78:Device output/---: none
+        -:   79:Dependencies: malloc
+        -:   80:*/
+  1116564:   81:RedBlackNodeType *createNodeFromData( char data, int nodeColor )
+        -:   82:    {
+  1116564:   83:     RedBlackNodeType* newNode = 
+  1116564:   84:        (RedBlackNodeType*)malloc(sizeof(RedBlackNodeType));
+        -:   85:
+  1116564:   86:     newNode->color = (Colors)nodeColor;
+  1116564:   87:     newNode->data = data;
+  1116564:   88:     newNode->parentPtr = NULL;
+  1116564:   89:     newNode->leftChildPtr = NULL;
+  1116564:   90:     newNode->rightChildPtr = NULL;
+        -:   91:
+  1116564:   92:     return newNode;
+        -:   93:    }
+        -:   94:
+        -:   95:/*
+        -:   96:Name: createNodeFromNode
+        -:   97:Process: allocates memory for node,
+        -:   98:         copies an individual tree node from another node,
+        -:   99:         all links are set to NULL
+        -:  100:Function input/parameters: pointer to source node (RedBlackNodeType *)
+        -:  101:Function output/parameters: none
+        -:  102:Function output/returned: pointer to destination node (RedBlackNodeType *)
+        -:  103:Device input/---: none
+        -:  104:Device output/---: none
+        -:  105:Dependencies: one line of code - createNodeFromData
+        -:  106:*/
+    #####:  107:RedBlackNodeType *createNodeFromNode( RedBlackNodeType *srcPtr )
+        -:  108:    {
+    #####:  109:     return createNodeFromData(srcPtr->data, srcPtr->color);
+        -:  110:    }
+        -:  111:
+        -:  112:/*
+        -:  113:Name: displayInOrder
+        -:  114:Process: traverses across tree, prints semicolon-delimited list,
+        -:  115:         displays "data / color" using in order strategy
+        -:  116:Function input/parameters:pointer to current working node (RedBlackNodeType *),
+        -:  117:                           pointer to row start flag 
+        -:  118:                           for first line of output (bool *)
+        -:  119:Function output/parameters: none
+        -:  120:Function output/returned: none
+        -:  121:Device input/---: none
+        -:  122:Device output/---: displayed as specified
+        -:  123:Dependencies: printf, displayInOrder (recursively)
+        -:  124:*/
+    #####:  125:void displayInOrder( RedBlackNodeType *wkgPtr, bool *rowStartFlag )
+        -:  126:    {     
+    #####:  127:     if (wkgPtr != NULL)
+        -:  128:        {
+    #####:  129:         displayInOrder(wkgPtr->leftChildPtr, rowStartFlag);
+        -:  130:
+    #####:  131:         if (*rowStartFlag)
+        -:  132:            {
+    #####:  133:             *rowStartFlag = false;
+    #####:  134:             printf("\nInorder  :  ");
+    #####:  135:            }
+        -:  136:         else
+        -:  137:            {
+    #####:  138:             printf("%s ", SEMICOLON_BREAK);
+        -:  139:            }
+        -:  140:
+    #####:  141:         printf("%c/%c", wkgPtr->data, (char)wkgPtr->color);
+        -:  142:
+    #####:  143:         displayInOrder(wkgPtr->rightChildPtr, rowStartFlag);
+    #####:  144:        }
+    #####:  145:    }
+        -:  146:
+        -:  147:/*
+        -:  148:Name: displayPostOrder
+        -:  149:Process: traverses across tree, prints semicolon-delimited list,
+        -:  150:         displays "data / color" using post order strategy
+        -:  151:Function input/parameters:pointer to current working node (RedBlackNodeType *),
+        -:  152:                           pointer to row start flag 
+        -:  153:                           for first line of output (bool *)
+        -:  154:Function output/parameters: none
+        -:  155:Function output/returned: none
+        -:  156:Device input/---: none
+        -:  157:Device output/---: displayed as specified
+        -:  158:Dependencies: printf, displayPostOrder (recursively)
+        -:  159:*/
+    #####:  160:void displayPostOrder( RedBlackNodeType *wkgPtr, bool *rowStartFlag )
+        -:  161:    {
+    #####:  162:     if (wkgPtr != NULL)
+        -:  163:        {
+    #####:  164:         displayPostOrder(wkgPtr->leftChildPtr, rowStartFlag);
+    #####:  165:         displayPostOrder(wkgPtr->rightChildPtr, rowStartFlag);
+        -:  166:
+    #####:  167:         if (*rowStartFlag)
+        -:  168:            {
+    #####:  169:             *rowStartFlag = false;
+    #####:  170:             printf("\nPostorder:  ");
+    #####:  171:            }
+        -:  172:         else
+        -:  173:            {
+    #####:  174:             printf("%s ", SEMICOLON_BREAK);
+        -:  175:            }
+        -:  176:
+    #####:  177:         printf("%c/%c", wkgPtr->data, (char)wkgPtr->color);
+    #####:  178:        }
+    #####:  179:    }
+        -:  180:
+        -:  181:/*
+        -:  182:Name: displayPreOrder
+        -:  183:Process: traverses across tree, prints semicolon-delimited list,
+        -:  184:         displays "data / color" using pre order strategy
+        -:  185:Function input/parameters:pointer to current working node (RedBlackNodeType *),
+        -:  186:                           pointer to row start flag 
+        -:  187:                           for first line of output (bool *)
+        -:  188:Function output/parameters: none
+        -:  189:Function output/returned: none
+        -:  190:Device input/---: none
+        -:  191:Device output/---: displayed as specified
+        -:  192:Dependencies: printf, displayPreOrder (recursively)
+        -:  193:*/
+ 43278990:  194:void displayPreOrder( RedBlackNodeType *wkgPtr, bool *rowStartFlag )
+        -:  195:    {
+ 43278990:  196:     if (wkgPtr != NULL)
+        -:  197:        {
+ 18303175:  198:         if (*rowStartFlag)
+        -:  199:            {
+  6672640:  200:             *rowStartFlag = false;
+  6672640:  201:             printf("\nPreorder :  ");
+  6672640:  202:            }
+        -:  203:         else
+        -:  204:            {
+ 11630535:  205:             printf("%s ", SEMICOLON_BREAK);
+        -:  206:            }
+        -:  207:
+ 18303175:  208:         printf("%c/%c", wkgPtr->data, (char)wkgPtr->color);
+        -:  209:
+ 18303175:  210:         displayPreOrder(wkgPtr->leftChildPtr, rowStartFlag);
+ 18303175:  211:         displayPreOrder(wkgPtr->rightChildPtr, rowStartFlag);
+ 18303175:  212:        }
+ 43278990:  213:    }
+        -:  214:
+        -:  215:/*
+        -:  216:Name: displayTree
+        -:  217:Process: controller function for calling appropriate tree traversal
+        -:  218:Function input/parameters: pointer to current tree root (RedBlackNodeType *),
+        -:  219:                           control codes INORDER_TRAVERSE, POSTORDER_TRAVERSE,
+        -:  220:                           PREORDER_TRAVERSE
+        -:  221:Function output/parameters: none
+        -:  222:Function output/returned: none
+        -:  223:Device input/---: none
+        -:  224:Device output/---: displayed as specified
+        -:  225:Dependencies: displayInOrder, displayPostOrder, displayPreOrder, printf
+        -:  226:*/
+  6672640:  227:void displayTree( RedBlackNodeType *rootPtr, ControlCodes traverseCode )
+        -:  228:    {
+  6672640:  229:     bool rowStartFlag = true;
+        -:  230:     
+  6672640:  231:     if (traverseCode == INORDER_TRAVERSE)
+        -:  232:        {
+    #####:  233:         displayInOrder(rootPtr, &rowStartFlag);
+    #####:  234:         printf("\n");
+    #####:  235:        }
+  6672640:  236:     else if (traverseCode == POSTORDER_TRAVERSE)
+        -:  237:        {
+    #####:  238:         displayPostOrder(rootPtr, &rowStartFlag);
+    #####:  239:         printf("\n");
+    #####:  240:        }
+  6672640:  241:     else if (traverseCode == PREORDER_TRAVERSE)
+        -:  242:        {
+  6672640:  243:         displayPreOrder(rootPtr, &rowStartFlag);
+  6672640:  244:         printf("\n");
+  6672640:  245:        }
+  6672640:  246:    }
+        -:  247:
+        -:  248:/*
+        -:  249:Name: findTreeHeight
+        -:  250:Process: recursively finds height of tree
+        -:  251:Function input/parameters: working pointer for recursion (RedBlackNodeType *)
+        -:  252:Function output/parameters: none
+        -:  253:Function output/returned: height of tree (int)
+        -:  254:Device input/---: none
+        -:  255:Device output/---: none
+        -:  256:Dependencies: getMax
+        -:  257:*/
+    #####:  258:int findTreeHeight( RedBlackNodeType *localPtr )
+        -:  259:    {
+        -:  260:     int leftHeight, rightHeight;
+        -:  261:
+        -:  262:     // check if local pointer is not null
+    #####:  263:     if (localPtr != NULL)
+        -:  264:        {
+        -:  265:         // recursively count size of left and right trees
+    #####:  266:         leftHeight = findTreeHeight(localPtr->leftChildPtr);
+    #####:  267:         rightHeight = findTreeHeight(localPtr->rightChildPtr);
+        -:  268:
+        -:  269:         // add 1 to the max of the two sizes and return it
+    #####:  270:         return getMax(leftHeight, rightHeight) + 1;
+        -:  271:        }
+        -:  272:
+        -:  273:     // otherwise, assume null and return a -1
+    #####:  274:     return -1;
+    #####:  275:    }
+        -:  276:
+        -:  277:/*
+        -:  278:Name: initializeRBT
+        -:  279:Process: returns NULL to tree root pointer to prepare tree for use
+        -:  280:Function input/parameters: none
+        -:  281:Function output/parameters: none
+        -:  282:Function output/returned: NULL
+        -:  283:Device input/---: none
+        -:  284:Device output/---: none
+        -:  285:Dependencies: none
+        -:  286:*/
+   345655:  287:RedBlackNodeType *initializeRBT()
+        -:  288:    {
+   345655:  289:     return NULL;
+        -:  290:    }
+        -:  291:
+        -:  292:/*
+        -:  293:Name: insert
+        -:  294:Process: sets first node if tree is empty, otherwise calls helper
+        -:  295:         to set nodes, then calls RBT resolver to rebalance tree
+        -:  296:         if node is successfully inserted by helper,
+        -:  297:         prints inserting/resolving statement and root color set to black
+        -:  298:Function input/parameters: tree root pointer (RedBlackNodeType *),
+        -:  299:                           data to be inserted (char)
+        -:  300:Function output/parameters: none
+        -:  301:Function output/returned: pointer to updated tree root (RedBlackNodeType *)
+        -:  302:Device input/---: none
+        -:  303:Device output/---: none
+        -:  304:Dependencies: printf, createNodeFromData, insertHelper, resolveRBT
+        -:  305:*/
+  6326985:  306:RedBlackNodeType *insert( RedBlackNodeType *treeRoot, char inData )
+        -:  307:    {
+        -:  308:     // initialize variables
+        -:  309:     RedBlackNodeType* insertedNodePtr;
+        -:  310:
+        -:  311:     // check if root node is null
+  6326985:  312:     if (treeRoot == NULL)
+        -:  313:        {
+        -:  314:         // create new root
+        -:  315:            // function: createNodeFromData
+   345655:  316:         insertedNodePtr = createNodeFromData(inData, RED);
+   345655:  317:         treeRoot = insertedNodePtr;
+   345655:  318:        }
+        -:  319:     // otherwise, assume root exists
+        -:  320:     else
+        -:  321:        {
+        -:  322:         // call insert helper to attempt to insert, save result
+        -:  323:         // funtion: insertHelper
+  5981330:  324:         insertedNodePtr = insertHelper(treeRoot, inData);
+        -:  325:        }
+        -:  326:
+        -:  327:     // check if insertion was successful (not null)
+  6326985:  328:     if (insertedNodePtr != NULL)
+        -:  329:        {
+        -:  330:         // print inserting/resolving statement
+        -:  331:         // function: printf
+  1116564:  332:         printf("\nInserting %c and resolving\n", inData);
+        -:  333:
+        -:  334:         // call resolver function to resolve
+        -:  335:         // function: resolveRBT
+  1116564:  336:         resolveRBT(&treeRoot, insertedNodePtr);
+  1116564:  337:        }
+        -:  338:
+  6326985:  339:     return treeRoot;
+        -:  340:    }
+        -:  341:
+        -:  342:/*
+        -:  343:Name: insertHelper
+        -:  344:Process: recursively finds place to add node, 
+        -:  345:         places node using "look down" strategy,
+        -:  346:         returns newly inserted node pointer, 
+        -:  347:         if duplicated nodes/keys attempted, returns NULL
+        -:  348:Function input/parameters: working pointer for recursion (RedBlackNodeType *),
+        -:  349:                           data to be inserted (char)
+        -:  350:Function output/parameters: none
+        -:  351:Function output/returned: pointer to inserted node (RedBlackNodeType *)
+        -:  352:Device input/---: none
+        -:  353:Device output/---: none
+        -:  354:Dependencies: createNodeFromData, insertHelper (recursively)
+        -:  355:*/
+ 10409563:  356:RedBlackNodeType *insertHelper( RedBlackNodeType *wkgPtr, char inData )
+        -:  357:    {
+        -:  358:     // initialize variables
+ 10409563:  359:     int diff = (int)inData - (int)wkgPtr->data;
+        -:  360:
+        -:  361:     // check if working pointer is null or if incoming data is a duplicate
+ 10409563:  362:     if (wkgPtr == NULL || diff == 0)
+        -:  363:        {
+        -:  364:         // return null if so
+  5210421:  365:         return NULL;
+        -:  366:        }
+        -:  367:     // otherwise, check if incoming data is less than working node
+  5199142:  368:     else if (diff < 0)
+        -:  369:        {
+        -:  370:         // check if left child is not null
+  4223983:  371:         if (wkgPtr->leftChildPtr != NULL)
+        -:  372:            {
+        -:  373:             // recurse to the left and return result
+  3789418:  374:             return insertHelper(wkgPtr->leftChildPtr, inData);
+        -:  375:            }
+        -:  376:
+        -:  377:         // otherwise, assume null and create new node, link to left child
+   434565:  378:         wkgPtr->leftChildPtr = createNodeFromData(inData, RED);
+        -:  379:
+        -:  380:         // link new child back up to working node
+   434565:  381:         wkgPtr->leftChildPtr->parentPtr = wkgPtr;
+        -:  382:
+        -:  383:         // return new node (new left child)
+   434565:  384:         return wkgPtr->leftChildPtr;
+        -:  385:        }
+        -:  386:     // otherwise, assume data is greater than working node
+        -:  387:     else
+        -:  388:        {
+        -:  389:         // check if right child is not null
+   975159:  390:         if (wkgPtr->rightChildPtr != NULL)
+        -:  391:            {
+        -:  392:             // recurse to the right and return result
+   638815:  393:             return insertHelper(wkgPtr->rightChildPtr, inData);
+        -:  394:            }
+        -:  395:         
+        -:  396:         // otherwise, assume null and create new node, link to right child
+   336344:  397:         wkgPtr->rightChildPtr = createNodeFromData(inData, RED);
+        -:  398:
+        -:  399:         // link new child back up to working node
+   336344:  400:         wkgPtr->rightChildPtr->parentPtr = wkgPtr;
+        -:  401:
+        -:  402:         // return new node (new right child)
+   336344:  403:         return wkgPtr->rightChildPtr;
+        -:  404:        }
+ 10409563:  405:    }
+        -:  406:
+        -:  407:/*
+        -:  408:Name: isEmpty
+        -:  409:Process: returns true if tree is empty, false otherwise
+        -:  410:Function input/parameters: tree root pointer (RedBlackNodeType *)
+        -:  411:Function output/parameters: none
+        -:  412:Function output/returned: result of test (bool)
+        -:  413:Device input/---: none
+        -:  414:Device output/---: none
+        -:  415:Dependencies: none
+        -:  416:*/
+    #####:  417:bool isEmpty( RedBlackNodeType *localPtr )
+        -:  418:    {
+    #####:  419:     return localPtr == NULL;
+        -:  420:    }
+        -:  421:
+        -:  422:/*
+        -:  423:Name: resolveRBT
+        -:  424:Process: recursively checks tree for need to rebalance, 
+        -:  425:         conducts rebalance as needed
+        -:  426:Function input/parameters: address of tree root pointer (RedBlackNodeType **),
+        -:  427:                           working pointer for recursion 
+        -:  428:                           which starts at the location 
+        -:  429:                           of the inserted node (RedBlackNodeType *)
+        -:  430:Function output/parameters: none
+        -:  431:Function output/returned: none
+        -:  432:Device input/---: none
+        -:  433:Device output/---: none
+        -:  434:Dependencies: printf, rotateLeft, rotateRight, swapColors, 
+        -:  435:                      displayTreeStructure, displayDivider
+        -:  436:*/
+  1304943:  437:void resolveRBT( RedBlackNodeType **treeRoot, RedBlackNodeType *wkgPtr )
+        -:  438:    {
+        -:  439:     // get pointers to relatives
+  1304943:  440:     RedBlackNodeType* parentPtr = wkgPtr->parentPtr;
+  1304943:  441:     RedBlackNodeType* grParentPtr = NULL;
+  1304943:  442:     RedBlackNodeType* greatGrParentPtr = NULL;
+  1304943:  443:     RedBlackNodeType* unclePtr = NULL;
+        -:  444:     RedBlackNodeType* newTopPtr;
+        -:  445:
+  1304943:  446:     if (parentPtr != NULL)
+        -:  447:        {
+   830656:  448:         grParentPtr = parentPtr->parentPtr;
+        -:  449:
+   830656:  450:         if (grParentPtr != NULL)
+        -:  451:            {
+   475079:  452:             greatGrParentPtr = grParentPtr->parentPtr;
+        -:  453:
+   475079:  454:             if (grParentPtr->leftChildPtr == parentPtr)
+        -:  455:                {
+   265965:  456:                 unclePtr = grParentPtr->rightChildPtr;
+   265965:  457:                }
+        -:  458:             else
+        -:  459:                {
+   209114:  460:                 unclePtr = grParentPtr->leftChildPtr;
+        -:  461:                }
+   475079:  462:            }
+   830656:  463:        }
+        -:  464:
+        -:  465:     // check if parent is not null and red
+  1304943:  466:     if (parentPtr != NULL && parentPtr->color == RED)
+        -:  467:        {
+        -:  468:         // print debugging statement
+   336164:  469:         printf("   - Parent is red\n");
+        -:  470:
+        -:  471:         // check if uncle is not null and red
+   336164:  472:         if (unclePtr != NULL && unclePtr->color == RED)
+        -:  473:            {
+        -:  474:             // print debugging statements
+   187016:  475:             printf("   - Uncle is red\n");
+   187016:  476:             printf("      - Grandparent set to red\n");
+   187016:  477:             printf("      - Uncle set to black\n");
+   187016:  478:             printf("      - Parent set to black\n");
+   187016:  479:             printf("      - Resolving Grandparent\n");
+        -:  480:
+        -:  481:             // change parent and uncle to Black
+   187016:  482:             parentPtr->color = BLACK;
+   187016:  483:             unclePtr->color = BLACK;
+        -:  484:
+        -:  485:             // change grandparent to Red
+   187016:  486:             grParentPtr->color = RED;
+        -:  487:
+        -:  488:             // resolve grandparent
+   187016:  489:             resolveRBT(treeRoot, grParentPtr);
+   187016:  490:            }
+        -:  491:         // otherwise, assume uncle is black, check for left cases
+   149148:  492:         else if (grParentPtr != NULL 
+   149148:  493:                  && grParentPtr->leftChildPtr == parentPtr)
+        -:  494:            {
+        -:  495:             // print debugging statement
+    81403:  496:             printf("   - Uncle is black\n");
+        -:  497:
+        -:  498:             // check for left-left case
+    81403:  499:             if (parentPtr->leftChildPtr == wkgPtr)
+        -:  500:                {
+        -:  501:                 // print debugging statements
+    80708:  502:                 printf("   - Left Left Case\n");
+    80708:  503:                 printf("      - Rotate Right from left side of ");
+    80708:  504:                 printf("grandparent\n");
+    80708:  505:                 printf("      - Swap grandparent/parent colors\n");
+        -:  506:
+        -:  507:                 // rotate right, old top = grandparent, new top = parent
+    80708:  508:                 newTopPtr = rotateRight(parentPtr, grParentPtr);
+        -:  509:
+        -:  510:                 // check if new top is now the root
+    80708:  511:                 if (greatGrParentPtr == NULL)
+        -:  512:                    {
+        -:  513:                     // update root pointer to new top
+    46476:  514:                     *treeRoot = newTopPtr;
+    46476:  515:                    }
+        -:  516:                 // otherwise, check if grandparent is left child
+    34232:  517:                 else if (greatGrParentPtr->leftChildPtr == grParentPtr)
+        -:  518:                    {
+        -:  519:                     // link great grandparent to new top
+    21977:  520:                     greatGrParentPtr->leftChildPtr = newTopPtr;
+    21977:  521:                    }
+        -:  522:                 // otherwise, assume grandparent is right child
+        -:  523:                 else
+        -:  524:                    {
+        -:  525:                     // link great grandparent to new top
+    12255:  526:                     greatGrParentPtr->rightChildPtr = newTopPtr;
+        -:  527:                    }
+        -:  528:
+        -:  529:                 // swap parent and grandparent colors
+    80708:  530:                 swapColors(parentPtr, grParentPtr);
+    80708:  531:                }
+        -:  532:             // otherwise, assume left-right case
+        -:  533:             else
+        -:  534:                {
+        -:  535:                 // rotate left, old top = parent, new top = working node
+      695:  536:                 rotateLeft(wkgPtr, parentPtr);
+        -:  537:
+        -:  538:                 // resolve parent
+      695:  539:                 resolveRBT(treeRoot, parentPtr);
+        -:  540:                }
+    81403:  541:            }
+        -:  542:         // otherwise, check for right cases
+    67745:  543:         else if (grParentPtr != NULL 
+    67745:  544:                  && grParentPtr->rightChildPtr == parentPtr)
+        -:  545:            {
+        -:  546:             // print debugging statement
+    67077:  547:             printf("   - Uncle is black\n");
+        -:  548:
+        -:  549:             // check for right-right case
+    67077:  550:             if (parentPtr->rightChildPtr == wkgPtr)
+        -:  551:                {
+        -:  552:                 // print debugging statements
+    66409:  553:                 printf("   - Right Right Case\n");
+    66409:  554:                 printf("      - Rotate Left from right side of ");
+    66409:  555:                 printf("grandparent\n");
+    66409:  556:                 printf("      - Swap grandparent/parent colors\n");
+        -:  557:
+        -:  558:                 // rotate left, old top = grandparent, new top = parent
+    66409:  559:                 newTopPtr = rotateLeft(parentPtr, grParentPtr);
+        -:  560:
+        -:  561:                 // check if new top is now the root
+    66409:  562:                 if (greatGrParentPtr == NULL)
+        -:  563:                    {
+        -:  564:                     // update root pointer to new top
+    37675:  565:                     *treeRoot = newTopPtr;
+    37675:  566:                    }
+        -:  567:                 // otherwise, check if grandparent is left child
+    28734:  568:                 else if (greatGrParentPtr->leftChildPtr == grParentPtr)
+        -:  569:                    {
+        -:  570:                     // link great grandparent to new top
+    13706:  571:                     greatGrParentPtr->leftChildPtr = newTopPtr;
+    13706:  572:                    }
+        -:  573:                 // otherwise, assume grandparent is right child
+        -:  574:                 else
+        -:  575:                    {
+        -:  576:                     // link great grandparent to new top
+    15028:  577:                     greatGrParentPtr->rightChildPtr = newTopPtr;
+        -:  578:                    }
+        -:  579:
+        -:  580:                 // swap parent and grandparent colors
+    66409:  581:                 swapColors(parentPtr, grParentPtr);
+    66409:  582:                }
+        -:  583:             // otherwise, assume right-left case
+        -:  584:             else
+        -:  585:                {
+        -:  586:                 // rotate right, old top = parent, new top = working node
+      668:  587:                 rotateRight(wkgPtr, parentPtr);
+        -:  588:
+        -:  589:                 // resolve parent
+      668:  590:                 resolveRBT(treeRoot, parentPtr);
+        -:  591:                }
+    67077:  592:            }
+   336164:  593:        }
+        -:  594:
+        -:  595:     // finally, check if this is root node
+  1304943:  596:     if (*treeRoot == wkgPtr)
+        -:  597:        {
+        -:  598:         // print debugging statement
+   474287:  599:         printf("   - Root color set to black\n");
+        -:  600:
+        -:  601:         // change working node to black
+   474287:  602:         wkgPtr->color = BLACK;
+   474287:  603:        }
+        -:  604:
+        -:  605:     // display structure for debugging if not the first value inserted
+        -:  606:     /*
+        -:  607:     if (wkgPtr->leftChildPtr != NULL || wkgPtr->rightChildPtr != NULL 
+        -:  608:         || wkgPtr->parentPtr != NULL)
+        -:  609:        {
+        -:  610:         printf("\n");
+        -:  611:         displayTreeStructure(*treeRoot, NODE_COLOR);
+        -:  612:         displayDivider(*treeRoot, THIN_DIVIDER);
+        -:  613:
+        -:  614:         displayTreeStructure(*treeRoot, NODE_DATA);
+        -:  615:         displayDivider(*treeRoot, THICK_DIVIDER);
+        -:  616:        }
+        -:  617:    */
+  1304943:  618:    }
+        -:  619:
+        -:  620:/*
+        -:  621:Name: rotateLeft
+        -:  622:Process: "rotates" nodes to the left by resetting pointers
+        -:  623:         to related nodes
+        -:  624:Function input/parameters: old and new top node pointers (RedBlackNodeType *)
+        -:  625:Function output/parameters: none
+        -:  626:Function output/returned: pointer to new top node (RedBlackNodeType *)
+        -:  627:Device input/---: none
+        -:  628:Device output/---: none
+        -:  629:Dependencies: none
+        -:  630:*/
+    67104:  631:RedBlackNodeType *rotateLeft( RedBlackNodeType *newTopPtr, 
+        -:  632:                                                  RedBlackNodeType *oldTopPtr )
+        -:  633:    {
+        -:  634:     // save a pointer to the old top's parent
+    67104:  635:     RedBlackNodeType* oldParent = oldTopPtr->parentPtr;
+        -:  636:
+        -:  637:     // point new top's parent to old top's parent
+    67104:  638:     newTopPtr->parentPtr = oldParent;
+        -:  639:
+        -:  640:     // point old top's parent to new top
+    67104:  641:     oldTopPtr->parentPtr = newTopPtr;
+        -:  642:
+        -:  643:     // point old top's right child to new top's left child
+    67104:  644:     oldTopPtr->rightChildPtr = newTopPtr->leftChildPtr;
+        -:  645:
+        -:  646:     // check if old top's new right child is not NULL
+    67104:  647:     if (oldTopPtr->rightChildPtr != NULL)
+        -:  648:        {
+        -:  649:         // link new right child back up to old top
+     2468:  650:         oldTopPtr->rightChildPtr->parentPtr = oldTopPtr;
+     2468:  651:        }
+        -:  652:
+        -:  653:     // point new top's left child to old top
+    67104:  654:     newTopPtr->leftChildPtr = oldTopPtr;
+        -:  655:
+        -:  656:     // return new top pointer
+    67104:  657:     return newTopPtr;
+        -:  658:    }
+        -:  659:
+        -:  660:/*
+        -:  661:Name: rotateRight
+        -:  662:Process: "rotates" nodes to the right by resetting pointers
+        -:  663:         to related nodes
+        -:  664:Function input/parameters: old and new top node pointers (RedBlackNodeType *)
+        -:  665:Function output/parameters: none
+        -:  666:Function output/returned: pointer to new top node (RedBlackNodeType *)
+        -:  667:Device input/---: none
+        -:  668:Device output/---: none
+        -:  669:Dependencies: none
+        -:  670:*/
+    81376:  671:RedBlackNodeType *rotateRight( RedBlackNodeType *newTopPtr, 
+        -:  672:                                                  RedBlackNodeType *oldTopPtr )
+        -:  673:    {
+        -:  674:     // save a pointer to the old top's parent
+    81376:  675:     RedBlackNodeType* oldParent = oldTopPtr->parentPtr;
+        -:  676:
+        -:  677:     // point new top's parent to old top's parent
+    81376:  678:     newTopPtr->parentPtr = oldParent;
+        -:  679:
+        -:  680:     // point old top's parent to new top
+    81376:  681:     oldTopPtr->parentPtr = newTopPtr;
+        -:  682:
+        -:  683:     // point old top's left child to new top's right child
+    81376:  684:     oldTopPtr->leftChildPtr = newTopPtr->rightChildPtr;
+        -:  685:
+        -:  686:     // check if old top's new left child is not NULL
+    81376:  687:     if (oldTopPtr->leftChildPtr != NULL)
+        -:  688:        {
+        -:  689:         // link new right child back up to old top
+     2459:  690:         oldTopPtr->leftChildPtr->parentPtr = oldTopPtr;
+     2459:  691:        }
+        -:  692:
+        -:  693:     // point new top's right child to old top
+    81376:  694:     newTopPtr->rightChildPtr = oldTopPtr;
+        -:  695:
+        -:  696:     // return new top pointer
+    81376:  697:     return newTopPtr;
+        -:  698:    }
+        -:  699:
+        -:  700:/*
+        -:  701:Name: swapColors
+        -:  702:Process: swaps or exchanges colors between two nodes
+        -:  703:Function input/parameters: pointers to two nodes (RedBlackNodeType *)
+        -:  704:Function output/parameters: none
+        -:  705:Function output/returned: updated pointers to two nodes (RedBlackNodeType *)
+        -:  706:Device input/---: none
+        -:  707:Device output/---: none
+        -:  708:Dependencies: none
+        -:  709:*/
+   147117:  710:void swapColors( RedBlackNodeType *one, RedBlackNodeType *other )
+        -:  711:    {
+   147117:  712:     Colors tempColor = one->color;
+   147117:  713:     one->color = other->color;
+   147117:  714:     other->color = tempColor;
+   147117:  715:    }
+        -:  716:
+        -:  717:////////////////////////////////////////////////////////////////////////////////
+        -:  718:// No student coding below this point
+        -:  719:////////////////////////////////////////////////////////////////////////////////      
+        -:  720:
+        -:  721:/*
+        -:  722:Name: displayAtTreeLevel
+        -:  723:Process: displays one horizontal "level" of a tree using text graphics
+        -:  724:         with appropriate spacing and appropriate number of nodes
+        -:  725:Function input/parameters: recursive working node (RedBlackNodeType *),
+        -:  726:                           node height, display level, working level (int),
+        -:  727:                           row start flag (bool),
+        -:  728:                           control code for either data or color
+        -:  729:Function output/parameters: none
+        -:  730:Function output/returned: updated row start flag (bool *)
+        -:  731:Device input/file: none
+        -:  732:Device output/monitor: none
+        -:  733:Dependencies: displayValue, displayEmptyNodeSpaces
+        -:  734:*/
+    #####:  735:void displayAtTreeLevel( RedBlackNodeType *workingNode, int nodeHeight, 
+        -:  736:                                  int displayLevel, int workingLevel, 
+        -:  737:                                     bool *rowStartFlag, ControlCodes ctrlCode )
+        -:  738:   {
+    #####:  739:    char charOut = workingNode->data;
+        -:  740:  
+    #####:  741:    if( ctrlCode == NODE_COLOR )
+        -:  742:       {
+    #####:  743:        charOut = (char)workingNode->color;      
+    #####:  744:       }
+        -:  745:   
+    #####:  746:    if( workingLevel == displayLevel )
+        -:  747:       {
+    #####:  748:        displayValue( charOut, nodeHeight, workingLevel, rowStartFlag );
+    #####:  749:       }
+        -:  750:  
+        -:  751:    else
+        -:  752:       {
+    #####:  753:        if( workingNode->leftChildPtr != NULL )
+        -:  754:           {
+    #####:  755:            displayAtTreeLevel( workingNode->leftChildPtr, nodeHeight,
+    #####:  756:                       displayLevel, workingLevel + 1, rowStartFlag, ctrlCode );
+    #####:  757:           }
+        -:  758:  
+        -:  759:        else
+        -:  760:           {
+    #####:  761:            displayEmptyNodeSpaces( nodeHeight, displayLevel, 
+    #####:  762:                                     workingLevel + 1, rowStartFlag, ctrlCode );
+        -:  763:           }
+        -:  764:      
+    #####:  765:        if( workingNode->rightChildPtr != NULL )
+        -:  766:           {
+    #####:  767:            displayAtTreeLevel( workingNode->rightChildPtr, nodeHeight,
+    #####:  768:                       displayLevel, workingLevel + 1, rowStartFlag, ctrlCode );
+    #####:  769:           }
+        -:  770:
+        -:  771:        else
+        -:  772:           {
+    #####:  773:            displayEmptyNodeSpaces( nodeHeight, displayLevel, 
+    #####:  774:                                     workingLevel + 1, rowStartFlag, ctrlCode );
+        -:  775:           }              
+        -:  776:       }
+    #####:  777:   }
+        -:  778:
+        -:  779:/*
+        -:  780:Name: displayChars
+        -:  781:Process: recursively displays a specified number of specified characters
+        -:  782:Function input/parameters: number of characters (int), 
+        -:  783:                           character to be displayed (char)
+        -:  784:Function output/parameters: none
+        -:  785:Function output/returned: none
+        -:  786:Device input/file: none
+        -:  787:Device output/monitor: characters displayed as specified
+        -:  788:Dependencies: printf
+        -:  789:*/
+    #####:  790:void displayChars( int numChars, char outChar )
+        -:  791:   {
+    #####:  792:    if( numChars > 0 )
+        -:  793:       {
+    #####:  794:        printf( "%c", outChar );
+        -:  795:      
+    #####:  796:        displayChars( numChars - 1, outChar );
+    #####:  797:       }
+    #####:  798:   }
+        -:  799:
+        -:  800:/*
+        -:  801:Name: displayDivider
+        -:  802:Process: displays divider of correct length for tree
+        -:  803:         using either THICK_DIVIDER or THIN_DIVIDER 
+        -:  804:         depending on the control code,
+        -:  805:         adds one endline to thick divider, two to thin for spacing
+        -:  806:Function input/parameters: number of characters (int), 
+        -:  807:                           character to be displayed (char)
+        -:  808:Function output/parameters: none
+        -:  809:Function output/returned: none
+        -:  810:Device input/file: none
+        -:  811:Device output/monitor: characters displayed as specified
+        -:  812:Dependencies: printf
+        -:  813:*/
+    #####:  814:void displayDivider( RedBlackNodeType *rootPtr, char dividerChar )
+        -:  815:   {
+    #####:  816:    int treeHeight = findTreeHeight( rootPtr );
+    #####:  817:    int numChars = toPower( 2, treeHeight + 2 );
+        -:  818:
+    #####:  819:    displayChars( numChars, dividerChar );
+        -:  820:
+    #####:  821:    if( dividerChar == THIN_DIVIDER )
+        -:  822:       {
+    #####:  823:        printf( "\n" );
+    #####:  824:       }
+        -:  825:
+    #####:  826:    printf( "\n" );
+    #####:  827:   }
+        -:  828:
+        -:  829:/*
+        -:  830:Name: displayEmptyNodeSpaces
+        -:  831:Process: displays the appropriate number of dashes for a given level
+        -:  832:         for null nodes, can display either dashes or 'B's
+        -:  833:Function input/parameters: node height, display level, working level (int)
+        -:  834:                           pointer to row start flag (bool *),
+        -:  835:                           control code for either data or color
+        -:  836:Function output/parameters: none
+        -:  837:Function output/returned: updated row start flag (bool *)
+        -:  838:Device input/file: none
+        -:  839:Device output/monitor: characters displayed as specified
+        -:  840:Dependencies: toPower, displayValue
+        -:  841:*/
+    #####:  842:void displayEmptyNodeSpaces( int nodeHeight, 
+        -:  843:                        int displayLevel, int workingLevel, 
+        -:  844:                                     bool *rowStartFlag, ControlCodes ctrlCode )
+        -:  845:   {
+    #####:  846:    int nodesToDisplay = toPower( 2, displayLevel - workingLevel ); 
+    #####:  847:    char charOut = SPACE;
+        -:  848:  
+    #####:  849:    if( displayLevel == workingLevel )
+        -:  850:       {
+    #####:  851:        charOut = DASH;
+        -:  852:      
+    #####:  853:        if( ctrlCode == NODE_COLOR )
+        -:  854:           {
+    #####:  855:            charOut = 'B';
+    #####:  856:           }
+    #####:  857:       }
+        -:  858:  
+    #####:  859:    while( nodesToDisplay > 0 )
+        -:  860:       {
+    #####:  861:        displayValue( charOut, nodeHeight, displayLevel, rowStartFlag );
+        -:  862:      
+    #####:  863:        nodesToDisplay--;
+        -:  864:       }
+    #####:  865:   }
+        -:  866:
+        -:  867:/*
+        -:  868:Name: displayTreeStructure
+        -:  869:Process: repeatedly calls other function to display 
+        -:  870:         the structure of an RB tree, can display either dashes or 'B's,
+        -:  871:         displays error message if empty tree
+        -:  872:Function input/parameters: tree root pointer (RedBlackNodeType *),
+        -:  873:                           control code for either data or color
+        -:  874:Function output/parameters: none
+        -:  875:Function output/returned: none
+        -:  876:Device input/file: none
+        -:  877:Device output/monitor: characters displayed as specified
+        -:  878:Dependencies: findTreeHeight, displayAtTreeLevel, printf
+        -:  879:*/
+    #####:  880:void displayTreeStructure( RedBlackNodeType *rbTreeRoot, ControlCodes ctrlCode )
+        -:  881:   {
+    #####:  882:    int displayLevel, nodeHeight = findTreeHeight( rbTreeRoot ) + 2;
+    #####:  883:    int workingLevel = 1;
+        -:  884:    bool rowStartFlag;
+        -:  885:
+    #####:  886:    if( rbTreeRoot != NULL )
+        -:  887:       {
+    #####:  888:        for( displayLevel = 1; displayLevel <= nodeHeight; displayLevel++ )
+        -:  889:           {
+    #####:  890:            rowStartFlag = true;
+        -:  891:          
+    #####:  892:            displayAtTreeLevel( rbTreeRoot, nodeHeight, 
+    #####:  893:                          displayLevel, workingLevel, &rowStartFlag, ctrlCode );
+        -:  894:          
+    #####:  895:            printf( "\n" );
+    #####:  896:           }
+    #####:  897:       }
+        -:  898:  
+        -:  899:    else
+        -:  900:       {
+    #####:  901:        printf( "\nEmpty Tree - No Display" );
+        -:  902:       }
+    #####:  903:   }
+        -:  904:
+        -:  905:/*
+        -:  906:Name: displayValue
+        -:  907:Process: displays a tree character value or color letter (R/B)
+        -:  908:         after a calculated set of leading spaces
+        -:  909:Function input/parameters: character data (char), 
+        -:  910:                           node height, working level (int),
+        -:  911:                           pointer to row start flag (bool *)
+        -:  912:Function output/parameters: updated row start flag (bool *)
+        -:  913:Function output/returned: none
+        -:  914:Device input/file: none
+        -:  915:Device output/monitor: character displayed as specified
+        -:  916:Dependencies: toPower, displayChars, printf
+        -:  917:*/
+    #####:  918:void displayValue( char data, int nodeHeight, 
+        -:  919:                                          int workingLevel, bool *rowStartFlag )
+        -:  920:   {
+        -:  921:    int leadingSpaces;
+        -:  922:  
+    #####:  923:    if( *rowStartFlag )
+        -:  924:       {
+    #####:  925:        leadingSpaces = toPower( 2, nodeHeight - workingLevel );
+        -:  926:
+    #####:  927:        *rowStartFlag = false;
+    #####:  928:       }
+        -:  929:  
+        -:  930:    else
+        -:  931:       {
+    #####:  932:        leadingSpaces = toPower( 2, nodeHeight - workingLevel + 1 ) - 1;
+        -:  933:       }
+        -:  934:
+    #####:  935:    displayChars( leadingSpaces, SPACE );
+        -:  936:  
+    #####:  937:    printf( "%c", data );         
+    #####:  938:   }
+        -:  939:
+        -:  940:/*
+        -:  941:Name: getMax
+        -:  942:Process: finds the maximum between two values, returns
+        -:  943:Function input/parameters: two values (int)
+        -:  944:Function output/parameters: none
+        -:  945:Function output/returned: maximum of two values (int)
+        -:  946:Device input/file: none
+        -:  947:Device output/monitor: none
+        -:  948:Dependencies: none
+        -:  949:*/
+    #####:  950:int getMax( int one, int other )
+        -:  951:   {
+    #####:  952:    int max = one;
+        -:  953:  
+    #####:  954:    if( other > max )
+        -:  955:       {
+    #####:  956:        max = other;
+    #####:  957:       }
+        -:  958:  
+    #####:  959:    return max;
+        -:  960:   }
+        -:  961:
+        -:  962:/*
+        -:  963:Name: toPower
+        -:  964:Process: recursively calculates a base to exponent value 
+        -:  965:         for positive integer exponents
+        -:  966:Function input/parameters: base, exponent (int)
+        -:  967:Function output/parameters: none
+        -:  968:Function output/returned: calculated value (int)
+        -:  969:Device input/file: none
+        -:  970:Device output/monitor: none
+        -:  971:Dependencies: none
+        -:  972:*/
+    #####:  973:int toPower( int base, int exponent )
+        -:  974:   {
+    #####:  975:    if( exponent > 0 )
+        -:  976:       {
+    #####:  977:        return toPower( base, exponent - 1 ) * base;
+        -:  978:       }
+        -:  979:  
+    #####:  980:    return 1;
+    #####:  981:   }
+        -:  982:

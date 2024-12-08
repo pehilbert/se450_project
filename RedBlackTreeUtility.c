@@ -227,7 +227,7 @@ Dependencies: displayInOrder, displayPostOrder, displayPreOrder, printf
 void displayTree( RedBlackNodeType *rootPtr, ControlCodes traverseCode )
     {
      bool rowStartFlag = true;
-
+     
      if (traverseCode == INORDER_TRAVERSE)
         {
          displayInOrder(rootPtr, &rowStartFlag);
@@ -603,6 +603,7 @@ void resolveRBT( RedBlackNodeType **treeRoot, RedBlackNodeType *wkgPtr )
         }
 
      // display structure for debugging if not the first value inserted
+     /*
      if (wkgPtr->leftChildPtr != NULL || wkgPtr->rightChildPtr != NULL 
          || wkgPtr->parentPtr != NULL)
         {
@@ -613,6 +614,7 @@ void resolveRBT( RedBlackNodeType **treeRoot, RedBlackNodeType *wkgPtr )
          displayTreeStructure(*treeRoot, NODE_DATA);
          displayDivider(*treeRoot, THICK_DIVIDER);
         }
+    */
     }
 
 /*
@@ -650,6 +652,15 @@ RedBlackNodeType *rotateLeft( RedBlackNodeType *newTopPtr,
 
      // point new top's left child to old top
      newTopPtr->leftChildPtr = oldTopPtr;
+     
+     if (oldParent != NULL && oldParent->leftChildPtr == oldTopPtr)
+        {
+         oldParent->leftChildPtr = newTopPtr;
+        }
+     else if (oldParent != NULL && oldParent->rightChildPtr == oldTopPtr)
+        {
+         oldParent->rightChildPtr = newTopPtr;
+        }
 
      // return new top pointer
      return newTopPtr;
@@ -690,6 +701,15 @@ RedBlackNodeType *rotateRight( RedBlackNodeType *newTopPtr,
 
      // point new top's right child to old top
      newTopPtr->rightChildPtr = oldTopPtr;
+
+     if (oldParent != NULL && oldParent->leftChildPtr == oldTopPtr)
+        {
+         oldParent->leftChildPtr = newTopPtr;
+        }
+     else if (oldParent != NULL && oldParent->rightChildPtr == oldTopPtr)
+        {
+         oldParent->rightChildPtr = newTopPtr;
+        }
 
      // return new top pointer
      return newTopPtr;

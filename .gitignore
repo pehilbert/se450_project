@@ -1,2 +1,4 @@
 fuzz_AFL
 TestRBT
+*.gcda
+*.gcno

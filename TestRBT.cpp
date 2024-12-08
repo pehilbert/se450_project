@@ -22,16 +22,20 @@ bool findInTree(RedBlackNodeType* treeRoot, char target) {
 }
 
 TEST (RBT, Main) {
-    int testSize = 10;
+    int testSize = DeepState_IntInRange(10, 30);
     RedBlackNodeType* rbt = initializeRBT();
     char toInsert;
 
     for (int test = 0; test < testSize; test++) {
         toInsert = DeepState_CharInRange('A', 'z');
 
-        LOG(TRACE) << "Inserting " << toInsert;
+        LOG(TRACE) << "#" << test << " - " << "Inserting " << toInsert;
 
         rbt = insert(rbt, toInsert);
+
+        LOG(TRACE) << "After inserting " << toInsert << ":";
+        displayTree(rbt, PREORDER_TRAVERSE);
+
         ASSERT(findInTree(rbt, toInsert));
     }
 
