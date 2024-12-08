@@ -334,6 +334,8 @@ RedBlackNodeType *insert( RedBlackNodeType *treeRoot, char inData )
          // call resolver function to resolve
          // function: resolveRBT
          resolveRBT(&treeRoot, insertedNodePtr);
+
+         return insertedNodePtr;
         }
 
      return treeRoot;
