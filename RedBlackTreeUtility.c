@@ -83,7 +83,7 @@ RedBlackNodeType *createNodeFromData( char data, int nodeColor )
      RedBlackNodeType* newNode = 
         (RedBlackNodeType*)malloc(sizeof(RedBlackNodeType));
 
-     newNode->color = nodeColor;
+     newNode->color = (Colors)nodeColor;
      newNode->data = data;
      newNode->parentPtr = NULL;
      newNode->leftChildPtr = NULL;
