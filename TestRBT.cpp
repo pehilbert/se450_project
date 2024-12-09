@@ -35,7 +35,6 @@ TEST (RBT, Main) {
 
         LOG(TRACE) << "After inserting " << toInsert << ":";
         displayTree(rbt, PREORDER_TRAVERSE);
-
         ASSERT(findInTree(rbt, toInsert));
     }
 
